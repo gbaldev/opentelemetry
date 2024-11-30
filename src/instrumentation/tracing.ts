@@ -5,7 +5,7 @@ import { trace, Tracer } from '@opentelemetry/api';
 
 export const initializeTracing = (): Tracer => {
   const otlpExporter = new OTLPTraceExporter({
-    url: "http://tempo:4317/v1/traces",
+    url: "http://localhost:4317/v1/traces",
   });
 
   const provider = new WebTracerProvider({

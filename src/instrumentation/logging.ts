@@ -50,7 +50,7 @@ class CustomLogger implements DiagLogger {
    private lokiExporter: LokiExporter;
 
    constructor(serviceName: string) {
-     this.lokiExporter = new LokiExporter('http://tempo:3100/loki/api/v1/push', serviceName);
+     this.lokiExporter = new LokiExporter('http://localhost:3100/loki/api/v1/push', serviceName);
    }
 
    verbose(message: string): void {
