@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
-
-import { Home } from './src/pages/Home';
+import Home from './src/containers/Home';
+import InstrumentationProvider from './src/providers/Instrumentation/provider';
 
 export default function App() {
   return (
@@ -10,8 +10,10 @@ export default function App() {
         barStyle="light-content" 
         translucent 
         backgroundColor="transparent" 
-      />
-      <Home />
+        />
+      <InstrumentationProvider>
+        <Home />
+      </InstrumentationProvider>
     </>
   );
 }

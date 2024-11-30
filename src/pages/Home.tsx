@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
 import { Header } from "../components/Header";
 import { Task, TasksList } from "../components/TasksList";
 import { TodoInput } from "../components/TodoInput";
+import { Instrumentation } from "../instrumentation";
 
-export function Home() {
+interface HomeProps {
+  instrumentation: Instrumentation;
+}
+
+export const Home: React.ComponentType<HomeProps> = ({
+  instrumentation,
+}) => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [inFocus, setInFocus] = useState(false);
 
   function handleAddTask(newTaskTitle: string) {
     const hasTaskWithThisName =
@@ -18,10 +26,12 @@ export function Home() {
         "Você não pode cadastrar uma task com o mesmo nome"
       );
     } else {
+      const id = new Date().getTime();
+      instrumentation.meter.registerCreate(id);
       setTasks([
         ...tasks,
         {
-          id: new Date().getTime(),
+          id,
           title: newTaskTitle,
           done: false,
         },
@@ -46,6 +56,7 @@ export function Home() {
 
   function handleRemoveTask(id: number) {
     const newTasks = tasks.filter((task) => task.id !== id);
+    instrumentation.meter.registerDelete(id);
     setTasks(newTasks);
   }
 
@@ -63,6 +74,29 @@ export function Home() {
 
     setTasks(newTasks);
   }
+
+  useEffect(() => {
+    const startTime = Date.now();  // Hora de inicio cuando entra en foco
+    const span = instrumentation.tracing.startSpan('screen-focus');  // Iniciar el span para rastrear el foco
+
+    // Establecer atributos del span
+    span.setAttribute('screen', 'MyScreen');
+    span.setAttribute('status', 'active');
+
+    // Cuando el componente se desmonta (sale del foco)
+    return () => {
+      const duration = Date.now() - startTime;  // Calcular el tiempo que estuvo en foco
+      span.setAttribute('duration', duration);  // Añadir la duración como atributo
+      span.end();  // Finalizar el span
+    };
+  }, [inFocus]);
+
+  useEffect(() => {
+    setInFocus(true);
+    return () => {
+      setInFocus(false);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
