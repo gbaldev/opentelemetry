@@ -1,19 +1,19 @@
 import React, { useMemo } from 'react';
-import { initializeTelemetry } from '../../instrumentation';
 import { InstrumentationContextType, Provider } from './context';
+import { useTracer } from '../../hooks/useTracer';
 
 type InstrumentationProviderProps = {};
 
 export const InstrumentationProvider: React.ComponentType<InstrumentationProviderProps> = ({
   children,
 }) => {
-  const instrumentation = initializeTelemetry();
+  const tracer = useTracer();
 
   const contextValue = useMemo<InstrumentationContextType>(
     () => ({
-      instrumentation
+      tracer
     }),
-    [instrumentation],
+    [tracer],
   );
 
   return <Provider value={contextValue}>{children}</Provider>;

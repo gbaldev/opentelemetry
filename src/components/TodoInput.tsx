@@ -12,6 +12,7 @@ export function TodoInput({ addTask }: TodoInputProps) {
   function handleAddNewTask() {
     if (task) {
       addTask(task);
+      fetch('https://www.google.com');
       setTask("");
     }
   }

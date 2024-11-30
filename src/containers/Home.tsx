@@ -5,10 +5,10 @@ import { Home as HomeScreen } from "../pages/Home";
 export interface HomeScreenContainerProps {}
 
 const Home: React.ComponentType<HomeScreenContainerProps> = () => {
-    const { instrumentation } = useInstrumentation();
+    const { tracer } = useInstrumentation();
 
     return (
-        <HomeScreen instrumentation={instrumentation} />
+        <HomeScreen tracer={tracer} />
     )
 }
 

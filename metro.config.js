@@ -21,6 +21,7 @@ module.exports = {
       stream: require.resolve('stream-browserify'),
       events: require.resolve('events'),
       fs: require.resolve('react-native-fs'),
+      url: require.resolve('url'),
       util: require.resolve('util'),
       'child_process': path.resolve(__dirname, 'src/mocks/child_process.js'),
       zlib: path.resolve(__dirname, 'node_modules/browserify-zlib'),

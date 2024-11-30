@@ -28,8 +28,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   updateTaskName,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editingTaskText, setEditingTaskText] = useState(task.title);
-  const textInputRef = useRef<TextInput>("");
+  const [editingTaskText, setEditingTaskText] = useState(task?.title ?? "");
+  const textInputRef = useRef<TextInput>(null);
 
   function handleStartEdition() {
     setIsEditing(true);

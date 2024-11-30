@@ -1,8 +1,7 @@
 import { createContext, useContext } from 'react';
-import { Instrumentation } from '../../instrumentation';
 
 export type InstrumentationContextType = {
-  instrumentation: Instrumentation;
+  tracer: any;
 };
 
 const InstrumentationContext = createContext<InstrumentationContextType | null>(null);
