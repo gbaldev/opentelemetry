@@ -24,7 +24,7 @@ export function TodoInput({ addTask }: TodoInputProps) {
         placeholderTextColor="#B2B2B2"
         returnKeyType="send"
         selectionColor="#666666"
-        value={task}
+        value={task ?? ""}
         onChangeText={setTask}
         onSubmitEditing={handleAddNewTask}
       />

@@ -12,5 +12,3 @@ export const initializeMetrics = () => {
 
   return meterProvider.getMeter('todo-list-meter');
 };
-
-export const meter = initializeMetrics();
