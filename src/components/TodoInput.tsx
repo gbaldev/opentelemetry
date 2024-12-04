@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import { useTracer } from "../hooks/useTracer";
 
 interface TodoInputProps {
   addTask: (task: string) => void;
@@ -8,10 +9,18 @@ interface TodoInputProps {
 
 export function TodoInput({ addTask }: TodoInputProps) {
   const [task, setTask] = useState("");
-
-  function handleAddNewTask() {
+  const loaded = useTracer()
+  const handleAddNewTask = async () => {
     if (task) {
       addTask(task);
+      if (loaded) {
+        try {
+          let res = await fetch('https://www.google.com/');
+          console.log(res.status);
+        } catch (e) {
+          console.log('error', e);
+        }
+      }
       setTask("");
     }
   }
