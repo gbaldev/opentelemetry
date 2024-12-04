@@ -11,7 +11,7 @@ export interface TracerResult {
     useEffect(() => {
        if (!loaded) {
         Tracer()
-          .catch(() => console.warn("failed to setup tracer"))
+          .catch((e) => console.warn("failed to setup tracer", e))
           .finally(() => setLoaded(true))
       }
     }, [loaded]);

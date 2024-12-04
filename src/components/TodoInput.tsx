@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import makeRequest from "../instrumentation/Tracer";
 
 interface TodoInputProps {
   addTask: (task: string) => void;
@@ -9,10 +10,15 @@ interface TodoInputProps {
 export function TodoInput({ addTask }: TodoInputProps) {
   const [task, setTask] = useState("");
 
-  function handleAddNewTask() {
+  const handleAddNewTask = async () => {
     if (task) {
       addTask(task);
-      fetch('https://www.google.com');
+      try {
+        let response = await makeRequest('https://pokeapi.co/api/v2/pokemon/1/');
+        console.log({response});
+      } catch (e) {
+        console.log('error', e);
+      }
       setTask("");
     }
   }
