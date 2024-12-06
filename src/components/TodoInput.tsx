@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import TodoListService from "../services/TodoListService/Provider";
 
 interface TodoInputProps {
   addTask: (task: string) => void;
@@ -12,6 +13,10 @@ export function TodoInput({ addTask }: TodoInputProps) {
   function handleAddNewTask() {
     if (task) {
       addTask(task);
+
+      // Simulate http request,send info log
+      TodoListService.get('https://www.google.com/');
+
       setTask("");
     }
   }
