@@ -1,0 +1,1 @@
+export const LOKI_ENDPOINT = 'http://localhost:3100/loki/api/v1';

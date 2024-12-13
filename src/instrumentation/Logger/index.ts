@@ -1,20 +1,16 @@
-import axios from 'axios';
-import { LOG_LEVEL } from './consts';
+import { LOG_LEVEL } from './constants';
 import { getTimeInNanoseconds } from '../../utils/timeUtils';
-
-const lokiAxios = axios.create({
-  baseURL: 'http://localhost:3100/loki/api/v1',
-  headers: {
-    'Content-Type': 'application/json',
-  }
-});
-
+import { lokiAxios } from '../../services/LogsService/provider';
+import { LOGGER_CONFIG } from './config';
 
 export const sendLog = async (
   logAction: { 
     url: string, 
     method: string, 
-    start_at: number 
+    start_at: number,
+    ends_at?: number,
+    latency?: number,
+    status?: number,
   }, 
   level: string = LOG_LEVEL.INFO,
 ) => {
@@ -24,10 +20,16 @@ export const sendLog = async (
     streams: [
       {
         stream: {
-          application: "todo-list-mobile",
-          log_level: level,
-          http_method: logAction.method,
-          http_url: logAction.url
+          service_name: LOGGER_CONFIG.SERVICE_NAME,
+          log_level: level.toUpperCase(),
+          http_method: logAction.method?.toUpperCase() || '',
+          http_url: logAction.url || '',
+          http_request_start_time: logAction.start_at.toString(),
+          otelServiceName: LOGGER_CONFIG.SERVICE_NAME,
+          start_at: logAction.start_at,
+          ends_at: logAction.ends_at || '',
+          latency: logAction.latency || '',
+          response_status: logAction.status || '',
         },
         values: [
           [timestamp.toString(), 'HTTP_REQUEST']
@@ -38,10 +40,8 @@ export const sendLog = async (
 
   try {
     const response = await lokiAxios.post('/push', logData);
-    console.log(`[SENDING LOG]: Method: ${logAction.method}, Url: ${logAction.url}, StartTime: ${logAction.start_at}, level: ${level}`);
-    console.log(response);
+    console.log(`[SENDING LOG]: Method: ${logAction.method}, Url: ${logAction.url}, StartTime: ${logAction.start_at}, level: ${level}, response status: ${response.status}`);
   } catch (error) {
-    console.log(`[ERROR SENDING LOG]: Method: ${logAction.method}, Url: ${logAction.url}, StartTime: ${logAction.start_at}, level: ${level}`);
-    console.error('Logging error:', error);
+    console.log(`[ERROR SENDING LOG]: Method: ${logAction.method}, Url: ${logAction.url}, StartTime: ${logAction.start_at}, level: ${level}, error: ${error}`);
   }
 };

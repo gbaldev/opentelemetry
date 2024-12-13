@@ -4,7 +4,7 @@ import { Header } from "../components/Header";
 import { Task, TasksList } from "../components/TasksList";
 import { TodoInput } from "../components/TodoInput";
 import tracing from "../instrumentation/Tracer";
-import Metrics from "../instrumentation/Metrics";
+import useScreenFocusedTimeTracer from "../hooks/useScreenFocusedTimeTracer";
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -65,56 +65,7 @@ export function Home() {
     setTasks(newTasks);
   }
 
-  useEffect(() => {
-    const span = tracing.startSpan('Screen focused');
-    span.setAttribute('focused_screen', 'Home');
-    setTimeout(() => {
-      span.end();
-    }, 10000);
-
-    const aver = async () => {
-      try {
-        const payload = {
-          "timeseries": [
-            {
-              "labels": [
-                {"name": "job", "value": "api"},
-                {"name": "instance", "value": "localhost:9090"}
-              ],
-              "samples": [
-                {
-                  "timestamp_ms": 1609459200000,
-                  "value": 123.45
-                },
-                {
-                  "timestamp_ms": 1609459260000,
-                  "value": 130.60
-                }
-              ],
-              "exemplars": [],
-              "histograms": []
-            }
-          ],
-          "source": "API",
-          "metadata": [
-            {
-              "type": "GAUGE",
-              "metric_family_name": "my_metric_family",
-              "help": "This is a test metric",
-              "unit": "seconds"
-            }
-          ],
-          "skip_label_validation": false,
-          "skip_label_count_validation": false
-        };
-        Metrics.sendMetric(payload as any);
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    aver();
-  }, []);
+  useScreenFocusedTimeTracer('Home');
 
   return (
     <View style={styles.container}>
