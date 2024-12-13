@@ -2,6 +2,8 @@ import { LOG_LEVEL } from './constants';
 import { getTimeInNanoseconds } from '../../utils/timeUtils';
 import { lokiAxios } from '../../services/LogsService/provider';
 import { LOGGER_CONFIG } from './config';
+import { getDeviceId, getSystemVersion, getVersion } from 'react-native-device-info';
+import { Platform } from 'react-native';
 
 export const sendLog = async (
   logAction: { 
@@ -32,7 +34,13 @@ export const sendLog = async (
           response_status: logAction.status || '',
         },
         values: [
-          [timestamp.toString(), 'HTTP_REQUEST']
+          [timestamp.toString(), 'HTTP_REQUEST', {
+            "SERVICE_NAME": "reactnativeapp",
+            'OS_NAME': Platform.OS,
+            'OS_VERSION': getSystemVersion(),
+            'SERVICE_VERSION': getVersion(),
+            'DEVICE_ID': getDeviceId(),
+          }]
         ],
       },
     ],

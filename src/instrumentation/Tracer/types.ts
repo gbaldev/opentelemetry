@@ -5,6 +5,11 @@ export interface TraceAttribute {
     intValue?: number;
     doubleValue?: number;
     boolValue?: boolean;
+    SERVICE_NAME?: string;
+    OS_NAME?: string;
+    OS_VERSION?: string;
+    SERVICE_VERSION?: string;
+    DEVICE_ID?: string;
   };
 }
   
